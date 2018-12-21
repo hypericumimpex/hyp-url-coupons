@@ -1,0 +1,161 @@
+# Copyright (C) 2018 SkyVerge
+# This file is distributed under the GNU General Public License v3.0.
+msgid ""
+msgstr ""
+"Project-Id-Version: WooCommerce URL Coupons 2.7.3\n"
+"Report-Msgid-Bugs-To: "
+"https://woocommerce.com/my-account/marketplace-ticket-form/\n"
+"POT-Creation-Date: 2018-12-19 05:02:54+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#. Plugin Name of the plugin/theme
+msgid "WooCommerce URL Coupons"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:96
+#: includes/class-wc-url-coupons-import-export-handler.php:77
+#: includes/class-wc-url-coupons-import-export-handler.php:165
+msgid "Unique URL"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:97
+msgid ""
+"The URL that a customer can visit to have this coupon / product added to "
+"their cart."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:104
+#: includes/class-wc-url-coupons-import-export-handler.php:78
+#: includes/class-wc-url-coupons-import-export-handler.php:166
+msgid "Products to Add to Cart"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:126
+#: includes/admin/class-wc-url-coupons-admin.php:143
+msgid "Search for a product&hellip;"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:156
+msgid "Add these products to the customers cart when they visit the URL."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:186
+#: includes/class-wc-url-coupons-import-export-handler.php:79
+#: includes/class-wc-url-coupons-import-export-handler.php:167
+msgid "Page Redirect"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:197
+#: includes/admin/class-wc-url-coupons-admin.php:215
+msgid "Select a page to redirect to&hellip;"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:223
+msgid ""
+"Select the page the customer will be redirected to after visiting the URL. "
+"Leave blank to disable redirect."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:249
+#: includes/class-wc-url-coupons-import-export-handler.php:81
+#: includes/class-wc-url-coupons-import-export-handler.php:168
+msgid "Defer Apply"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:250
+msgid ""
+"Check this box to defer applying the coupon until the customer's cart meets "
+"the coupon's requirements."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:272
+#: includes/admin/class-wc-url-coupons-admin.php:366
+msgid "Homepage"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:446
+msgid "Pages"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:447
+msgid "Posts"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:448
+msgid "Products"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:449
+msgid "Categories"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:450
+msgid "Tags"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:451
+msgid "Product Categories"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:452
+msgid "Product Tags"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:633
+msgid "Hide Coupon Code Field"
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:634
+msgid "Hide on cart page."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:635
+msgid "Enable to hide the coupon code field on the cart page."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:643
+msgid "Hide on checkout page."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:644
+msgid "Enable to hide the coupon code field on the checkout page."
+msgstr ""
+
+#: includes/admin/class-wc-url-coupons-admin.php:668
+msgid "URL Slug"
+msgstr ""
+
+#: includes/class-wc-url-coupons-import-export-handler.php:80
+msgid "Page Redirect Type"
+msgstr ""
+
+#: includes/frontend/class-wc-url-coupons-frontend.php:293
+msgid "Coupon added but not yet applied:"
+msgstr ""
+
+#: includes/frontend/class-wc-url-coupons-frontend.php:294
+msgid "Coupon already added but not yet applied:"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.woocommerce.com/products/url-coupons/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Create a unique URL that applies a discount and optionally adds one or more "
+"products to the customer's cart."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SkyVerge"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.woocommerce.com"
+msgstr ""
