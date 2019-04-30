@@ -16,15 +16,14 @@
  * versions in the future. If you wish to customize WooCommerce URL Coupons for your
  * needs please refer to http://docs.woocommerce.com/document/url-coupons/ for more information.
  *
- * @package     WC-URL-Coupons/Admin
  * @author      SkyVerge
- * @copyright   Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright   Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_3_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
 
 /**
  * Admin class

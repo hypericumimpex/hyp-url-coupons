@@ -16,9 +16,8 @@
  * versions in the future. If you wish to customize WooCommerce URL Coupons for your
  * needs please refer to http://docs.woocommerce.com/document/url-coupons/ for more information.
  *
- * @package     WC-URL-Coupons/Classes
  * @author      SkyVerge
- * @copyright   Copyright (c) 2013-2018, SkyVerge, Inc.
+ * @copyright   Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
@@ -26,7 +25,7 @@ namespace SkyVerge\WooCommerce\URL_Coupons;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_3_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
 
 /**
  * Plugin lifecycle handler.
@@ -39,50 +38,36 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 
 	/**
-	 * Upgrades the plugin to the current version.
+	 * Lifecycle constructor.
 	 *
-	 * @since 2.7.0
+	 * @since 2.7.4
 	 *
-	 * @param string $installed_version current version
+	 * @param \WC_URL_Coupons $plugin
 	 */
-	protected function upgrade( $installed_version ) {
+	public function __construct( $plugin ) {
 
-		if ( ! empty( $installed_version ) ) {
+		parent::__construct( $plugin );
 
-			$update_path = array(
-				'1.0.2' => 'update_to_1_0_2',
-				'2.0.0' => 'update_to_2_0_0',
-				'2.1.1' => 'update_to_2_1_1',
-				'2.5.1' => 'update_to_2_5_1',
-			);
-
-			foreach ( $update_path as $update_to_version => $update_script ) {
-
-				if ( version_compare( $installed_version, $update_to_version, '<' ) ) {
-
-					// special handling for 2.5.0 => 2.5.1
-					if ( '2.5.1' === $update_to_version && ! version_compare( $installed_version, '2.5.0', '=' ) ) {
-						continue;
-					}
-
-					$this->$update_script();
-				}
-			}
-		}
+		$this->upgrade_versions = [
+			'1.0.2',
+			'2.0.0',
+			'2.1.1',
+			'2.5.1',
+		];
 	}
 
 
 	/**
-	 * Update to v1.0.2
-	 *
-	 * @since 2.7.0
+	 * Updates to v1.0.2
 	 *
 	 * Prior versions had a bug where any coupons trashed would not remove the associated unique URL from the active list,
 	 * resulting in "coupon does not exist" errors when the unique URLs were visited.
 	 * This wasn't a very visible problem with very unique URLs, but becomes a serious problem
 	 * when someone uses "/checkout/" as the unique URL.
+	 *
+	 * @since 2.7.4
 	 */
-	private function update_to_1_0_2() {
+	protected function upgrade_to_1_0_2() {
 
 		// load active coupon list
 		$coupons = (array) get_option( 'wc_url_coupons_active_urls', array() );
@@ -101,21 +86,21 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 		// clear transient
 		delete_transient( 'wc_url_coupons_active_urls' );
-
-		$this->get_plugin()->log( 'Updated to version 1.0.2' );
 	}
 
 
 	/**
-	 * Update to v2.0.0
+	 * Updates to v2.0.0
 	 *
 	 * Two changes to the coupon data:
 	 *
 	 * 1) "force apply" is now called "defer apply"
 	 * 2) prior versions didn't support the redirect page type and while we can (and do) use `page` as the default,
 	 *    it's nicer to have the redirect page type set properly
+	 *
+	 * @since 2.7.4
 	 */
-	private function update_to_2_0_0() {
+	protected function upgrade_to_2_0_0() {
 
 		$coupons = (array) get_option( 'wc_url_coupons_active_urls', array() );
 
@@ -176,19 +161,17 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 		// clear transient
 		delete_transient( 'wc_url_coupons_active_urls' );
-
-		$this->get_plugin()->log( 'Updated to version 2.0.0' );
 	}
 
 
 	/**
-	 * Update to version 2.1.1
-	 *
-	 * @since 2.7.0
+	 * Updates to version 2.1.1
 	 *
 	 * Prior versions didn't update the redirect post type coupon meta.
+	 *
+	 * @since 2.7.4
 	 */
-	private function update_to_2_1_1() {
+	protected function upgrade_to_2_1_1() {
 
 		$coupons = (array) get_option( 'wc_url_coupons_active_urls' );
 
@@ -236,22 +219,25 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 				update_post_meta( $coupon_id, '_wc_url_coupons_redirect_page_type', $post_type );
 			}
 		}
-
-		$this->get_plugin()->log( 'Updated to version 2.1.1' );
 	}
 
 
 	/**
-	 * Update to version 2.5.1
+	 * Updates to version 2.5.1
 	 *
 	 * Upgrade to 2.5.1, only from 2.5.0 and if running WC 3.0+.
 	 * Some data was incorrectly set for WC 3.0+ using v2.5.0 due to select2 upgrade.
 	 *
 	 * Note: the following update script wouldn't run anymore in newer versions of the plugin, but it's left here for reference.
 	 *
-	 * @since 2.7.0
+	 * @since 2.7.4
 	 */
-	private function update_to_2_5_1() {
+	protected function upgrade_to_2_5_1() {
+
+		// special handling if upgrading from 2.5.0 to 2.5.1
+		if ( ! version_compare( $this->get_installed_version(), '2.5.0', '=' ) ) {
+			return;
+		}
 
 		$plugin = $this->get_plugin();
 
@@ -277,8 +263,6 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 			delete_transient( 'wc_url_coupons_active_urls' );
 		}
-
-		$plugin->log( 'Updated to version 2.5.1' );
 	}
 
 

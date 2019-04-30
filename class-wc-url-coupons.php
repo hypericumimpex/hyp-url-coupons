@@ -16,15 +16,14 @@
  * versions in the future. If you wish to customize WooCommerce URL Coupons for your
  * needs please refer to http://docs.woocommerce.com/document/url-coupons/ for more information.
  *
- * @package     HYP-URL-Coupons/Classes
- * @author      Romeo C.
- * @copyright   Copyright (c) 2013-2018, Hypericum Impex
+ * @author      SkyVerge
+ * @copyright   Copyright (c) 2013-2019, SkyVerge, Inc.
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_3_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
 
 /**
  * URL Coupons main plugin class.
@@ -35,7 +34,7 @@ class WC_URL_Coupons extends Framework\SV_WC_Plugin {
 
 
 	/** plugin version number */
-	const VERSION = '2.7.3';
+	const VERSION = '2.7.4';
 
 	/** @var WC_URL_Coupons single instance of this plugin */
 	protected static $instance;
