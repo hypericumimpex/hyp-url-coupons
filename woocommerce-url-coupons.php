@@ -5,7 +5,7 @@
  * Description: Create a unique URL that applies a discount and optionally adds one or more products to the customer's cart.
  * Author: Romeo C.
  * Author URI: https://github.com/hypericumimpex/
- * Version: 2.7.4
+ * Version: 2.7.5
  * Text Domain: woocommerce-url-coupons
  * Domain Path: /i18n/languages/
  *
@@ -22,7 +22,7 @@
  *
  * Woo: 184613:9912621edf36273767b4166cda88fa54
  * WC requires at least: 2.6.14
- * WC tested up to: 3.6.1
+ * WC tested up to: 3.6.3
  */
 
 defined( 'ABSPATH' ) or exit;

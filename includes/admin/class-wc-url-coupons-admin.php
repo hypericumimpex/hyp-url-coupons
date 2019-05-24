@@ -41,40 +41,43 @@ class WC_URL_Coupons_Admin {
 	public function __construct() {
 
 		// add per-coupon options
-		add_action( 'woocommerce_coupon_options', array( $this, 'add_coupon_options' ) );
-		add_action( 'woocommerce_coupon_options', array( $this, 'render_coupon_option_js' ), 11 );
+		add_action( 'woocommerce_coupon_options', [ $this, 'add_coupon_options' ], 10, 2 );
+		add_action( 'woocommerce_coupon_options', [ $this, 'render_coupon_option_js' ], 11 );
 
 		// save per-coupon options
-		add_action( 'woocommerce_process_shop_coupon_meta', array( $this, 'save_coupon_options' ) );
+		add_action( 'woocommerce_process_shop_coupon_meta', [ $this, 'save_coupon_options' ], 10, 2 );
 
 		// purge unique URL from active list when parent coupon is trashed or deleted
-		add_action( 'wp_trash_post', array( $this, 'purge_coupon_url' ) );
+		add_action( 'wp_trash_post', [ $this, 'purge_coupon_url' ] );
 
 		// add settings to hide coupon code field
 		// displays on the General tab in WC 3.4+, or Checkout in older versions
 		if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte( '3.4.0' ) ) {
-			add_filter( 'woocommerce_general_settings', array( $this, 'admin_settings' ) );
+			add_filter( 'woocommerce_general_settings', [ $this, 'admin_settings' ] );
 		} else {
-			add_filter( 'woocommerce_payment_gateways_settings', array( $this, 'admin_settings' ) );
+			add_filter( 'woocommerce_payment_gateways_settings', [ $this, 'admin_settings' ] );
 		}
 
 		// add a 'URL slug' column to the coupon list table
-		add_filter( 'manage_edit-shop_coupon_columns',        array( $this, 'add_url_slug_column_header' ), 20 );
-		add_action( 'manage_shop_coupon_posts_custom_column', array( $this, 'add_url_slug_column' ) );
+		add_filter( 'manage_edit-shop_coupon_columns',        [ $this, 'add_url_slug_column_header' ], 20 );
+		add_action( 'manage_shop_coupon_posts_custom_column', [ $this, 'add_url_slug_column' ] );
 	}
 
 
 	/**
-	 * Add coupon options to the Coupon edit page.
+	 * Adds coupon options to the Coupon edit page.
 	 *
 	 * @internal
 	 *
 	 * @since 1.0
+	 *
+	 * @param int $coupon_id coupon identifier (available in newer WooCommerce versions)
+	 * @param \WC_Coupon $coupon coupon object (available in newer WooCommerce versions)
 	 */
-	public function add_coupon_options() {
+	public function add_coupon_options( $coupon_id = null, $coupon = null ) {
 		global $post;
 
-		$coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $post->ID );
+		$coupon = $coupon instanceof \WC_Coupon ? $coupon : Framework\SV_WC_Coupon_Compatibility::get_coupon( $post );
 
 		?>
 		<div class="options_group">
@@ -472,30 +475,32 @@ class WC_URL_Coupons_Admin {
 
 
 	/**
-	 * Save coupon options on Coupon edit page.
+	 * Saves coupon options on Coupon edit page.
 	 *
 	 * @internal
 	 *
 	 * @since 1.0
-	 * @param int $post_id Coupon ID.
+	 *
+	 * @param int $post_id coupon ID
+	 * @param \WP_Post coupon post object
 	 */
-	public function save_coupon_options( $post_id ) {
+	public function save_coupon_options( $post_id, $post ) {
 
-		$coupon             = Framework\SV_WC_Coupon_Compatibility::get_coupon( $post_id );
+		$coupon             = Framework\SV_WC_Coupon_Compatibility::get_coupon( $post );
 		$unique_url         = ! empty( $_POST['_wc_url_coupons_unique_url'] )         ?  $_POST['_wc_url_coupons_unique_url']         : '';
 		$redirect_page      = ! empty( $_POST['_wc_url_coupons_redirect_page'] )      ?  $_POST['_wc_url_coupons_redirect_page']      : '';
 		$redirect_page_type = ! empty( $_POST['_wc_url_coupons_redirect_page_type'] ) ?  $_POST['_wc_url_coupons_redirect_page_type'] : 'page';
 		$page               = explode( '|', $redirect_page );
 		$redirect_page_id   = isset( $page[1] ) ? $page[1] : '';
 
-		// Unique URL.
+		// unique URL
 		if ( empty( $unique_url ) ) {
 			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_unique_url' );
 		} else {
 			Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_unique_url', sanitize_text_field( $unique_url ) );
 		}
 
-		// Redirect.
+		// redirect
 		if ( empty( $redirect_page ) ) {
 			Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page', 0 ); // 0 is checked in maybe_apply_coupons() to redirect to shop page since redirect is empty.
 			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_redirect_page_type' );
@@ -504,12 +509,12 @@ class WC_URL_Coupons_Admin {
 			Framework\SV_WC_Order_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page_type', sanitize_key( $redirect_page_type ) );
 		}
 
-		// Products to add to cart.
+		// products to add to cart
 		$product_ids = isset( $_POST['_wc_url_coupons_product_ids'] ) ? $_POST['_wc_url_coupons_product_ids'] : array();
 
 		// TODO remove this when WC 3.0 and Select2 v4.0.3 is the minimum requirement {FN 2017-02-17}
-		// Select2 v3.5.3 saves values as a comma-separated string.
 		if ( is_string( $product_ids ) ) {
+			// Select2 v3.5.3 saves values as a comma-separated string
 			$product_ids = explode( ',', $product_ids );
 		}
 
@@ -519,7 +524,7 @@ class WC_URL_Coupons_Admin {
 			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_product_ids' );
 		}
 
-		// Defer apply.
+		// defer apply option
 		$defer_apply = isset( $_POST['_wc_url_coupons_defer_apply'] ) ? $_POST['_wc_url_coupons_defer_apply'] : '';
 
 		if ( ! empty( $defer_apply ) ) {
@@ -528,16 +533,16 @@ class WC_URL_Coupons_Admin {
 			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_defer_apply' );
 		}
 
-		$options = array(
+		$options = [
 			'coupon_id'          => $post_id,
 			'unique_url'         => $unique_url,
 			'redirect_page'      => $redirect_page_id,
 			'redirect_page_type' => $redirect_page_type,
 			'product_ids'        => $product_ids,
 			'defer_apply'        => $defer_apply,
-		);
+		];
 
-		// Update active coupon array option.
+		// update active coupon array option
 		$this->update_coupons( $options );
 	}
 
@@ -546,21 +551,22 @@ class WC_URL_Coupons_Admin {
 	 * Helper function to update the active coupon option array.
 	 *
 	 * @since 1.0
+	 *
 	 * @param array $options coupon options
 	 */
 	public function update_coupons( $options ) {
 
 		// load existing coupon urls
-		$coupons = get_option( 'wc_url_coupons_active_urls', array() );
+		$coupons = get_option( 'wc_url_coupons_active_urls', [] );
 
 		// add coupon URL & Redirect page ID
-		$coupons[ $options['coupon_id'] ] = array(
+		$coupons[ $options['coupon_id'] ] = [
 			'url'                => strtolower( $options['unique_url'] ),
 			'redirect'           => (int) $options['redirect_page'],
 			'redirect_page_type' => $options['redirect_page_type'],
-			'products'           => ! empty( $options['product_ids'] ) && is_array( $options['product_ids'] ) ? array_map( 'absint', (array) $options['product_ids'] ) : array(),
+			'products'           => ! empty( $options['product_ids'] ) && is_array( $options['product_ids'] ) ? array_map( 'absint', (array) $options['product_ids'] ) : [],
 			'defer'              => $options['defer_apply'],
-		);
+		];
 
 		// remove coupon URL if blank
 		if ( ! $options['unique_url'] ) {

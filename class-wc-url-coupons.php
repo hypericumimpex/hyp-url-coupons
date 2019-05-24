@@ -34,7 +34,7 @@ class WC_URL_Coupons extends Framework\SV_WC_Plugin {
 
 
 	/** plugin version number */
-	const VERSION = '2.7.4';
+	const VERSION = '2.7.5';
 
 	/** @var WC_URL_Coupons single instance of this plugin */
 	protected static $instance;

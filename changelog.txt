@@ -1,5 +1,8 @@
 *** WooCommerce URL Coupons Changelog ***
 
+2019.05.22 - version 2.7.5
+ * Fix - Save the coupon URL when the coupon status is draft or pending review, or the coupon is scheduled for future publication
+
 2019.04.24 - version 2.7.4
  * Misc - Add support for WooCommerce 3.6
  * Misc - Require PHP 5.4+
