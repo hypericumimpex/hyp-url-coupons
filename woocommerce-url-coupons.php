@@ -5,7 +5,7 @@
  * Description: Create a unique URL that applies a discount and optionally adds one or more products to the customer's cart.
  * Author: Romeo C.
  * Author URI: https://github.com/hypericumimpex/
- * Version: 2.7.5
+ * Version: 2.8.0
  * Text Domain: woocommerce-url-coupons
  * Domain Path: /i18n/languages/
  *
@@ -21,8 +21,8 @@
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  *
  * Woo: 184613:9912621edf36273767b4166cda88fa54
- * WC requires at least: 2.6.14
- * WC tested up to: 3.6.3
+ * WC requires at least: 3.0.9
+ * WC tested up to: 3.7.0
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -49,16 +49,16 @@ class WC_URL_Coupons_Loader {
 
 
 	/** minimum PHP version required by this plugin */
-	const MINIMUM_PHP_VERSION = '5.4.0';
+	const MINIMUM_PHP_VERSION = '5.6.0';
 
 	/** minimum WordPress version required by this plugin */
 	const MINIMUM_WP_VERSION = '4.4';
 
 	/** minimum WooCommerce version required by this plugin */
-	const MINIMUM_WC_VERSION = '2.6';
+	const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.4.0';
+	const FRAMEWORK_VERSION = '5.4.1';
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce URL Coupons';

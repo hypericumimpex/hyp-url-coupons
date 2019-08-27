@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
 
 /**
  * Admin class
@@ -118,42 +118,19 @@ class WC_URL_Coupons_Admin {
 
 				?>
 
-				<?php if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) : ?>
-
-					<select
-						name="_wc_url_coupons_product_ids[]"
-						class="wc-product-search"
-						style="width: 50%;"
-						multiple="multiple"
-						data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woocommerce-url-coupons' ); ?>"
-						data-action="woocommerce_json_search_products_and_variations">
-						<?php foreach( $url_coupon_product_ids as $product_id ) : ?>
-							<?php if ( $product = wc_get_product( $product_id ) ) : ?>
-								<option value="<?php echo esc_attr( $product_id ); ?>" selected="selected"><?php echo esc_html( $product->get_formatted_name() ); ?></option>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					</select>
-
-				<?php else : ?>
-
-					<input
-						type="hidden"
-						name="_wc_url_coupons_product_ids"
-						class="wc-product-search"
-						style="width: 50%;"
-						data-multiple="true"
-						data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woocommerce-url-coupons' ); ?>"
-						data-action="woocommerce_json_search_products_and_variations"
-						data-selected="<?php $json_ids = array();
-						foreach ( $url_coupon_product_ids as $product_id ) {
-							$product = wc_get_product( $product_id );
-							$json_ids[ $product_id ] = wp_kses_post( $product->get_formatted_name() );
-						}
-						echo esc_attr( json_encode( $json_ids ) ); ?>"
-						value="<?php echo implode( ',', array_keys( $json_ids ) ); ?>"
-					/>
-
-				<?php endif; ?>
+				<select
+					name="_wc_url_coupons_product_ids[]"
+					class="wc-product-search"
+					style="width: 50%;"
+					multiple="multiple"
+					data-placeholder="<?php esc_attr_e( 'Search for a product&hellip;', 'woocommerce-url-coupons' ); ?>"
+					data-action="woocommerce_json_search_products_and_variations">
+					<?php foreach( $url_coupon_product_ids as $product_id ) : ?>
+						<?php if ( $product = wc_get_product( $product_id ) ) : ?>
+							<option value="<?php echo esc_attr( $product_id ); ?>" selected="selected"><?php echo esc_html( $product->get_formatted_name() ); ?></option>
+						<?php endif; ?>
+					<?php endforeach; ?>
+				</select>
 
 				<?php echo wc_help_tip( __( 'Add these products to the customers cart when they visit the URL.', 'woocommerce-url-coupons' ) ); ?>
 			</p>
@@ -187,40 +164,19 @@ class WC_URL_Coupons_Admin {
 			<p class="form-field _wc_url_coupons_redirect_page_field">
 				<label for="_wc_url_coupons_redirect_page"><?php esc_html_e( 'Page Redirect', 'woocommerce-url-coupons' ); ?></label>
 
-				<?php if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) : ?>
-
-					<select
-						name="_wc_url_coupons_redirect_page"
-						id="_wc_url_coupons_redirect_page"
-						class="sv-wc-enhanced-search"
-						style="min-width: 300px;"
-						data-action="wc_url_coupons_json_search_page_redirects"
-						data-nonce="<?php echo wp_create_nonce( 'search-page-redirects' ); ?>"
-						data-placeholder="<?php esc_attr_e( 'Select a page to redirect to&hellip;', 'woocommerce-url-coupons' ); ?>"
-						data-allow_clear="true">
-						<?php if ( ! empty( $selected_value ) ) : ?>
-							<option value="<?php echo esc_attr( key( $selected_value ) ); ?>" selected><?php echo esc_html( $selected_page_title ); ?></option>
-						<?php endif; ?>
-					</select>
-
-				<?php else : ?>
-
-					<input
-						type="hidden"
-						name="_wc_url_coupons_redirect_page"
-						id="_wc_url_coupons_redirect_page"
-						class="sv-wc-enhanced-search"
-						style="min-width: 300px;"
-						data-multiple="false"
-						data-action="wc_url_coupons_json_search_page_redirects"
-						data-nonce="<?php echo wp_create_nonce( 'search-page-redirects' ); ?>"
-						data-placeholder="<?php esc_attr_e( 'Select a page to redirect to&hellip;', 'woocommerce-url-coupons' ); ?>"
-						data-allow_clear="true"
-						data-selected="<?php echo esc_attr( current( $selected_value ) );  ?>"
-						value="<?php echo esc_attr( key( $selected_value ) ); ?>"
-					/>
-
-				<?php endif; ?>
+				<select
+					name="_wc_url_coupons_redirect_page"
+					id="_wc_url_coupons_redirect_page"
+					class="sv-wc-enhanced-search"
+					style="min-width: 300px;"
+					data-action="wc_url_coupons_json_search_page_redirects"
+					data-nonce="<?php echo wp_create_nonce( 'search-page-redirects' ); ?>"
+					data-placeholder="<?php esc_attr_e( 'Select a page to redirect to&hellip;', 'woocommerce-url-coupons' ); ?>"
+					data-allow_clear="true">
+					<?php if ( ! empty( $selected_value ) ) : ?>
+						<option value="<?php echo esc_attr( key( $selected_value ) ); ?>" selected><?php echo esc_html( $selected_page_title ); ?></option>
+					<?php endif; ?>
+				</select>
 
 				<?php echo wc_help_tip( __( 'Select the page the customer will be redirected to after visiting the URL. Leave blank to disable redirect.', 'woocommerce-url-coupons' ) ); ?>
 

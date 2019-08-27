@@ -21,11 +21,11 @@
  * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License v3.0
  */
 
-namespace SkyVerge\WooCommerce\PluginFramework\v5_4_0;
+namespace SkyVerge\WooCommerce\PluginFramework\v5_4_1;
 
 defined( 'ABSPATH' ) or exit;
 
-if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_0\\SV_WC_Coupon_Compatibility' ) ) :
+if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\v5_4_1\\SV_WC_Coupon_Compatibility' ) ) :
 
 /**
  * WooCommerce coupon compatibility class.
@@ -100,19 +100,12 @@ class SV_WC_Coupon_Compatibility extends SV_WC_Data_Compatibility {
 
 		} elseif ( $coupon_id instanceof \WP_Post ) {
 
-			$coupon = SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ? new \WC_Coupon( $coupon_id->ID ) : new \WC_Coupon( $coupon_id->post_title );
+			$coupon = new \WC_Coupon( $coupon_id->ID );
 
 		} elseif ( is_numeric( $coupon_id ) ) {
 
-			if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
-
-				$post_title = wc_get_coupon_code_by_id( $coupon_id );
-				$coupon     = new \WC_Coupon( $post_title );
-
-			} elseif ( $post = get_post( $coupon_id ) ){
-
-				$coupon = new \WC_Coupon( $post->post_title );
-			}
+			$post_title = wc_get_coupon_code_by_id( $coupon_id );
+			$coupon     = new \WC_Coupon( $post_title );
 		}
 
 		return $coupon;

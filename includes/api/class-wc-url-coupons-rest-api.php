@@ -25,7 +25,7 @@ namespace SkyVerge\WooCommerce\URL_Coupons;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
 
 /**
  * URL Coupons REST API handler.

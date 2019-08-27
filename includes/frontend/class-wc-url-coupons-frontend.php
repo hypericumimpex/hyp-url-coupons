@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
 
 /**
  * Frontend class - handles applying coupons and rendering messages
@@ -288,7 +288,7 @@ class WC_URL_Coupons_Frontend {
 		// change error message only if error is "actionable"
 		if ( $this->is_error_actionable( $error_code ) ) {
 
-			$coupon_id            = Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ? $coupon->get_id() : $coupon->id;
+			$coupon_id            = $coupon->get_id();
 			$coupon_added         = __( 'Coupon added but not yet applied:', 'woocommerce-url-coupons' );
 			$coupon_already_added = __( 'Coupon already added but not yet applied:', 'woocommerce-url-coupons' );
 			$deferred_notice      = isset( $this->deferred_coupons[ $coupon_id ] ) ? $coupon_already_added : $coupon_added;

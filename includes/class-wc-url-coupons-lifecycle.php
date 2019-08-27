@@ -25,7 +25,7 @@ namespace SkyVerge\WooCommerce\URL_Coupons;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_0 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
 
 /**
  * Plugin lifecycle handler.
@@ -111,32 +111,18 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 			if ( $coupons[ $coupon_id ]['defer'] ) {
 
-				if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+				if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
 
-					if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
-
-						Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_defer_apply', 'yes' );
-					}
-
-				} else {
-
-					update_post_meta( $coupon_id, '_wc_url_coupons_defer_apply', 'yes' );
+					Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_defer_apply', 'yes' );
 				}
 			}
 
 			// remove force
 			unset( $coupons[ $coupon_id ]['force'] );
 
-			if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+			if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
 
-				if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
-
-					Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_force_apply' );
-				}
-
-			} else {
-
-				delete_post_meta( $coupon_id, '_wc_url_coupons_force_apply' );
+				Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_force_apply' );
 			}
 
 			// update redirect page type
@@ -182,20 +168,13 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 				continue;
 			}
 
-			if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+			if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
 
-				if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
+				$redirect_page_type = Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page_type', true );
 
-					$redirect_page_type = Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page_type', true );
-
-					if ( ! empty( $redirect_page_type ) ) {
-						continue;
-					}
+				if ( ! empty( $redirect_page_type ) ) {
+					continue;
 				}
-
-			} elseif ( get_post_meta( $coupon_id, '_wc_url_coupons_redirect_page_type', true ) ) {
-
-				continue;
 			}
 
 			$post_type = get_post_type( $data['redirect'] );
@@ -207,16 +186,9 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 				$post_type = 'product';
 			}
 
-			if ( Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+			if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
 
-				if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
-
-					Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page_type', $post_type );
-				}
-
-			} else {
-
-				update_post_meta( $coupon_id, '_wc_url_coupons_redirect_page_type', $post_type );
+				Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page_type', $post_type );
 			}
 		}
 	}
@@ -241,7 +213,7 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 		$plugin = $this->get_plugin();
 
-		if ( '2.5.1' === $plugin::VERSION && Framework\SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
+		if ( '2.5.1' === $plugin::VERSION ) {
 
 			$coupons  = (array) get_option( 'wc_url_coupons_active_urls', array() );
 			$new_data = array();
