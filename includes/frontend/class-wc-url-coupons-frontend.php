@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 /**
  * Frontend class - handles applying coupons and rendering messages
@@ -213,7 +213,7 @@ class WC_URL_Coupons_Frontend {
 				 *  @type string $defer whether to defer apply, yes or no
 				 * }
 				 */
-				$query_vars = apply_filters( 'wc_url_coupons_redirect_query_args', $query_vars, Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ), $coupon );
+				$query_vars = apply_filters( 'wc_url_coupons_redirect_query_args', $query_vars, new WC_Coupon( $coupon_id ), $coupon );
 
 				// add query vars back so things like google analytics campaign tracking works
 				if ( ! empty( $query_vars ) ) {

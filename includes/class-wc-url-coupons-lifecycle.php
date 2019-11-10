@@ -25,7 +25,7 @@ namespace SkyVerge\WooCommerce\URL_Coupons;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 /**
  * Plugin lifecycle handler.
@@ -111,18 +111,20 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 
 			if ( $coupons[ $coupon_id ]['defer'] ) {
 
-				if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
+				if ( is_numeric( $coupon_id ) && $coupon = new WC_Coupon( $coupon_id ) ) {
 
-					Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_defer_apply', 'yes' );
+					$coupon->update_meta_data( '_wc_url_coupons_defer_apply', 'yes' );
+					$coupon->save_meta_data();
 				}
 			}
 
 			// remove force
 			unset( $coupons[ $coupon_id ]['force'] );
 
-			if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
+			if ( is_numeric( $coupon_id ) && $coupon = new WC_Coupon( $coupon_id ) ) {
 
-				Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_force_apply' );
+				$coupon->delete_meta_data( '_wc_url_coupons_force_apply' );
+				$coupon->save_meta_data();
 			}
 
 			// update redirect page type
@@ -168,9 +170,9 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 				continue;
 			}
 
-			if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
+			if ( is_numeric( $coupon_id ) && $coupon = new WC_Coupon( $coupon_id ) ) {
 
-				$redirect_page_type = Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page_type', true );
+				$redirect_page_type = $coupon->get_meta( '_wc_url_coupons_redirect_page_type' );
 
 				if ( ! empty( $redirect_page_type ) ) {
 					continue;
@@ -186,9 +188,10 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 				$post_type = 'product';
 			}
 
-			if ( $coupon = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id ) ) {
+			if ( is_numeric( $coupon_id ) && $coupon = new WC_Coupon( $coupon_id ) ) {
 
-				Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page_type', $post_type );
+				$coupon->update_meta_data( '_wc_url_coupons_redirect_page_type', $post_type );
+				$coupon->save_meta_data();
 			}
 		}
 	}
@@ -226,8 +229,9 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 				if ( 0 == $data['redirect'] ) {
 
 					// good news! coupon meta wasn't updated as as result of this error since checks failed, so we can still get it
-					$coupon                             = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id );
-					$new_data[ $coupon_id ]['redirect'] = Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page' );
+					$coupon = is_numeric( $coupon_id ) ? new WC_Coupon( $coupon_id ) : null;
+
+					$new_data[ $coupon_id ]['redirect'] = $coupon ? $coupon->get_meta( '_wc_url_coupons_redirect_page' ) : '';
 				}
 			}
 

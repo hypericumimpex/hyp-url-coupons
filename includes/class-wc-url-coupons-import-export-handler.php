@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 /**
  * URL Coupons Import/Export Handler
@@ -119,7 +119,7 @@ class WC_URL_Coupons_Import_Export_Handler {
 	 */
 	public function csv_import_suite_url_coupons_update_coupon_data( $coupon_id, $coupon_data ) {
 
-		$coupon      = Framework\SV_WC_Coupon_Compatibility::get_coupon( $coupon_id );
+		$coupon      = new WC_Coupon( $coupon_id );
 		$url_coupons = isset( $coupon_data['url_coupons'] ) ? $coupon_data['url_coupons'] : null;
 
 		if ( $coupon && is_array( $url_coupons ) ) {
@@ -136,11 +136,13 @@ class WC_URL_Coupons_Import_Export_Handler {
 				}
 
 				// Update Coupon meta.
-				Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, $meta_key, $value );
+				$coupon->update_meta_data( $meta_key, $value );
 
 				// Add to coupon options.
 				$coupon_options[ str_replace( '_wc_url_coupons_', '', $meta_key ) ] = $value;
 			}
+
+			$coupon->save_meta_data();
 
 			// Update active coupon array options.
 			wc_url_coupons()->get_admin_instance()->update_coupons( $coupon_options );

@@ -1,5 +1,8 @@
 *** WooCommerce URL Coupons Changelog ***
 
+2019.11.07 - version 2.9.0
+ * Misc - Add support for WooCommerce 3.8
+
 2019.08.12 - version 2.8.0
  * Misc - Add support for WooCommerce 3.7
  * Misc - Remove support for WooCommerce 2.6

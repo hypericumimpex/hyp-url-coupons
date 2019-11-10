@@ -2,7 +2,7 @@
 Author: skyverge
 Tags: woocommerce
 Requires at least: 4.4
-Tested up to: 5.2.2
+Tested up to: 5.2.4
 Requires PHP: 5.6
 
 Create a unique url that applies a discount and optionally adds one or more products to the customer's cart.

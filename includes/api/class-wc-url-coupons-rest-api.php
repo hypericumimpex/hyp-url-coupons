@@ -25,7 +25,7 @@ namespace SkyVerge\WooCommerce\URL_Coupons;
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 /**
  * URL Coupons REST API handler.
@@ -66,11 +66,11 @@ class REST_API extends Framework\REST_API {
 		// update active coupon array option
 		wc_url_coupons()->get_admin_instance()->update_coupons( array(
 			'coupon_id'          => $coupon->get_id(),
-			'unique_url'         => Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_unique_url' ),
-			'redirect_page'      => Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page' ),
-			'redirect_page_type' => Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page_type' ),
-			'product_ids'        => Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_product_ids' ),
-			'defer_apply'        => Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_defer_apply' ),
+			'unique_url'         => $coupon->get_meta( '_wc_url_coupons_unique_url' ),
+			'redirect_page'      => $coupon->get_meta( '_wc_url_coupons_redirect_page' ),
+			'redirect_page_type' => $coupon->get_meta( '_wc_url_coupons_redirect_page_type' ),
+			'product_ids'        => $coupon->get_meta( '_wc_url_coupons_product_ids' ),
+			'defer_apply'        => $coupon->get_meta( '_wc_url_coupons_defer_apply' ),
 		) );
 	}
 

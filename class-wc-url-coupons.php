@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 /**
  * URL Coupons main plugin class.
@@ -34,7 +34,7 @@ class WC_URL_Coupons extends Framework\SV_WC_Plugin {
 
 
 	/** plugin version number */
-	const VERSION = '2.8.0';
+	const VERSION = '2.9.0';
 
 	/** @var WC_URL_Coupons single instance of this plugin */
 	protected static $instance;

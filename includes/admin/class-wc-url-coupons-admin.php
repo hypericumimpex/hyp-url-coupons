@@ -23,7 +23,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
-use SkyVerge\WooCommerce\PluginFramework\v5_4_1 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_5_0 as Framework;
 
 /**
  * Admin class
@@ -60,7 +60,7 @@ class WC_URL_Coupons_Admin {
 
 		// add a 'URL slug' column to the coupon list table
 		add_filter( 'manage_edit-shop_coupon_columns',        [ $this, 'add_url_slug_column_header' ], 20 );
-		add_action( 'manage_shop_coupon_posts_custom_column', [ $this, 'add_url_slug_column' ] );
+		add_action( 'manage_shop_coupon_posts_custom_column', [ $this, 'add_url_slug_column' ], 10, 2 );
 	}
 
 
@@ -69,15 +69,14 @@ class WC_URL_Coupons_Admin {
 	 *
 	 * @internal
 	 *
+	 * In 2.9.0 $coupon_id and $coupon are required
+	 *
 	 * @since 1.0
 	 *
-	 * @param int $coupon_id coupon identifier (available in newer WooCommerce versions)
-	 * @param \WC_Coupon $coupon coupon object (available in newer WooCommerce versions)
+	 * @param int $coupon_id coupon identifier
+	 * @param \WC_Coupon $coupon coupon object
 	 */
-	public function add_coupon_options( $coupon_id = null, $coupon = null ) {
-		global $post;
-
-		$coupon = $coupon instanceof \WC_Coupon ? $coupon : Framework\SV_WC_Coupon_Compatibility::get_coupon( $post );
+	public function add_coupon_options( $coupon_id, $coupon ) {
 
 		?>
 		<div class="options_group">
@@ -90,7 +89,7 @@ class WC_URL_Coupons_Admin {
 			 * @param string $unique_url The unique URL for the coupon (defaults to empty string).
 			 * @param int $coupon_id The shop coupon ID.
 			 */
-			$unique_url = apply_filters( 'wc_url_coupons_unique_url', Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_unique_url', true ), $post->ID );
+			$unique_url = apply_filters( 'wc_url_coupons_unique_url', $coupon->get_meta( '_wc_url_coupons_unique_url' ), $coupon_id );
 
 			// Unique URL field.
 			woocommerce_wp_text_input( array(
@@ -113,7 +112,7 @@ class WC_URL_Coupons_Admin {
 				 * @param false|array $product_ids The product ids to add to cart
 				 * @param int $coupon_id The shop coupon id
 				 */
-				$url_coupon_product_ids = apply_filters( 'wc_url_coupons_product_ids', Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_product_ids', true ), $post->ID );
+				$url_coupon_product_ids = apply_filters( 'wc_url_coupons_product_ids', $coupon->get_meta( '_wc_url_coupons_product_ids' ), $coupon_id );
 				$url_coupon_product_ids = ! empty( $url_coupon_product_ids ) && is_array( $url_coupon_product_ids ) ? array_filter( array_map( 'absint', $url_coupon_product_ids ) ) : array();
 
 				?>
@@ -143,7 +142,7 @@ class WC_URL_Coupons_Admin {
 			 * @param false|int $redirect_content_id The content object ID (or false if none set).
 			 * @param int $coupon_id The shop coupon ID.
 			 */
-			$selected_page_id    = apply_filters( 'wc_url_coupons_redirect_page_id', Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page', true ), $post->ID );
+			$selected_page_id = apply_filters( 'wc_url_coupons_redirect_page_id', $coupon->get_meta( '_wc_url_coupons_redirect_page' ), $coupon_id );
 
 			/**
 			 * Redirect target type
@@ -152,13 +151,13 @@ class WC_URL_Coupons_Admin {
 			 * @param false|string $redirect_content_type The content type (or false if none set).
 			 * @param int $coupon_id The shop coupon ID.
 			 */
-			$selected_page_type  = apply_filters( 'wc_url_coupons_redirect_page_type', Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_redirect_page_type', true ), $post->ID );
+			$selected_page_type = apply_filters( 'wc_url_coupons_redirect_page_type', $coupon->get_meta( '_wc_url_coupons_redirect_page_type' ), $coupon_id );
 
 			// Redirect target selection formatted for enhanced input.
 			$selected_page_title = $this->get_selected_redirect_page_title( $selected_page_id, $selected_page_type );
 
 			// Enhanced select value.
-			$selected_value      = ! empty( $selected_page_title ) ? array( $selected_page_type . '|' . $selected_page_id => esc_html( $selected_page_title ) ) : array();
+			$selected_value = ! empty( $selected_page_title ) ? array( $selected_page_type . '|' . $selected_page_id => esc_html( $selected_page_title ) ) : array();
 
 			// Redirect to page dropdown field. ?>
 			<p class="form-field _wc_url_coupons_redirect_page_field">
@@ -199,7 +198,7 @@ class WC_URL_Coupons_Admin {
 			 * @param false|string $defer_apply Checkbox option: 'yes', 'no' or false if not set
 			 * @param int $coupon_id The shop coupon id
 			 */
-			$defer_apply = apply_filters( 'wc_url_coupons_defer_apply', Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_defer_apply', true ), $post->ID );
+			$defer_apply = apply_filters( 'wc_url_coupons_defer_apply', $coupon->get_meta( '_wc_url_coupons_defer_apply' ), $coupon_id );
 
 			// defer apply option
 			woocommerce_wp_checkbox( array(
@@ -442,7 +441,7 @@ class WC_URL_Coupons_Admin {
 	 */
 	public function save_coupon_options( $post_id, $post ) {
 
-		$coupon             = Framework\SV_WC_Coupon_Compatibility::get_coupon( $post );
+		$coupon             = new WC_Coupon( $post->ID );
 		$unique_url         = ! empty( $_POST['_wc_url_coupons_unique_url'] )         ?  $_POST['_wc_url_coupons_unique_url']         : '';
 		$redirect_page      = ! empty( $_POST['_wc_url_coupons_redirect_page'] )      ?  $_POST['_wc_url_coupons_redirect_page']      : '';
 		$redirect_page_type = ! empty( $_POST['_wc_url_coupons_redirect_page_type'] ) ?  $_POST['_wc_url_coupons_redirect_page_type'] : 'page';
@@ -451,18 +450,18 @@ class WC_URL_Coupons_Admin {
 
 		// unique URL
 		if ( empty( $unique_url ) ) {
-			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_unique_url' );
+			$coupon->delete_meta_data( '_wc_url_coupons_unique_url' );
 		} else {
-			Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_unique_url', sanitize_text_field( $unique_url ) );
+			$coupon->update_meta_data( '_wc_url_coupons_unique_url', sanitize_text_field( $unique_url ) );
 		}
 
 		// redirect
 		if ( empty( $redirect_page ) ) {
-			Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page', 0 ); // 0 is checked in maybe_apply_coupons() to redirect to shop page since redirect is empty.
-			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_redirect_page_type' );
+			$coupon->update_meta_data( '_wc_url_coupons_redirect_page', 0 ); // 0 is checked in maybe_apply_coupons() to redirect to shop page since redirect is empty.
+			$coupon->delete_meta_data( '_wc_url_coupons_redirect_page_type' );
 		} elseif ( $redirect_page_id && $redirect_page_type ) {
-			Framework\SV_WC_Order_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page', (int) $redirect_page_id );
-			Framework\SV_WC_Order_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_redirect_page_type', sanitize_key( $redirect_page_type ) );
+			$coupon->update_meta_data( '_wc_url_coupons_redirect_page', (int) $redirect_page_id );
+			$coupon->update_meta_data( '_wc_url_coupons_redirect_page_type', sanitize_key( $redirect_page_type ) );
 		}
 
 		// products to add to cart
@@ -475,18 +474,18 @@ class WC_URL_Coupons_Admin {
 		}
 
 		if ( ! empty( $product_ids ) && is_array( $product_ids ) ) {
-			Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_product_ids', array_map( 'absint', $product_ids ) );
+			$coupon->update_meta_data( '_wc_url_coupons_product_ids', array_map( 'absint', $product_ids ) );
 		} else {
-			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_product_ids' );
+			$coupon->delete_meta_data( '_wc_url_coupons_product_ids' );
 		}
 
 		// defer apply option
 		$defer_apply = isset( $_POST['_wc_url_coupons_defer_apply'] ) ? $_POST['_wc_url_coupons_defer_apply'] : '';
 
 		if ( ! empty( $defer_apply ) ) {
-			Framework\SV_WC_Coupon_Compatibility::update_meta_data( $coupon, '_wc_url_coupons_defer_apply', sanitize_text_field( $defer_apply ) );
+			$coupon->update_meta_data( '_wc_url_coupons_defer_apply', sanitize_text_field( $defer_apply ) );
 		} else {
-			Framework\SV_WC_Coupon_Compatibility::delete_meta_data( $coupon, '_wc_url_coupons_defer_apply' );
+			$coupon->delete_meta_data( '_wc_url_coupons_defer_apply' );
 		}
 
 		$options = [
@@ -497,6 +496,8 @@ class WC_URL_Coupons_Admin {
 			'product_ids'        => $product_ids,
 			'defer_apply'        => $defer_apply,
 		];
+
+		$coupon->save_meta_data();
 
 		// update active coupon array option
 		$this->update_coupons( $options );
@@ -637,15 +638,19 @@ class WC_URL_Coupons_Admin {
 	 *
 	 * @internal
 	 *
+	 * In 2.9.0 added $coupon_id param
+	 *
 	 * @since 2.0.0
-	 * @param array $column
+	 *
+	 * @param string $column the name of the column to display
+	 * @param int $coupon_id the current coupon ID
 	 */
-	public function add_url_slug_column( $column ) {
+	public function add_url_slug_column( $column, $coupon_id ) {
 
 		if ( 'url_slug' === $column ) {
 
-			$coupon = isset( $GLOBALS['post']->ID ) ? Framework\SV_WC_Coupon_Compatibility::get_coupon( $GLOBALS['post']->ID ) : null;
-			$slug   = $coupon ? Framework\SV_WC_Coupon_Compatibility::get_meta( $coupon, '_wc_url_coupons_unique_url', true )  : null;
+			$coupon = new WC_Coupon( $coupon_id );
+			$slug   = $coupon ? $coupon->get_meta( '_wc_url_coupons_unique_url' ) : null;
 
 			echo $slug ? esc_html( $slug ) : '&ndash;';
 		}

@@ -5,11 +5,11 @@
  * Description: Create a unique URL that applies a discount and optionally adds one or more products to the customer's cart.
  * Author: Romeo C.
  * Author URI: https://github.com/hypericumimpex/
- * Version: 2.8.0
+ * Version: 2.9.0
  * Text Domain: woocommerce-url-coupons
  * Domain Path: /i18n/languages/
  *
- * Copyright: (c) 2013-2018, SkyVerge, Inc. (info@skyverge.com)
+ * Copyright: (c) 2013-2019, Hypericum
  *
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -22,7 +22,7 @@
  *
  * Woo: 184613:9912621edf36273767b4166cda88fa54
  * WC requires at least: 3.0.9
- * WC tested up to: 3.7.0
+ * WC tested up to: 3.8.0
  */
 
 defined( 'ABSPATH' ) or exit;
@@ -58,7 +58,7 @@ class WC_URL_Coupons_Loader {
 	const MINIMUM_WC_VERSION = '3.0.9';
 
 	/** SkyVerge plugin framework version used by this plugin */
-	const FRAMEWORK_VERSION = '5.4.1';
+	const FRAMEWORK_VERSION = '5.5.0';
 
 	/** the plugin name, for displaying notices */
 	const PLUGIN_NAME = 'WooCommerce URL Coupons';
@@ -150,7 +150,7 @@ class WC_URL_Coupons_Loader {
 			require_once( plugin_dir_path( __FILE__ ) . 'vendor/skyverge/wc-plugin-framework/woocommerce/compatibility/abstract-sv-wc-data-compatibility.php' );
 		}
 
-		// TODO remove this when WC 3.0 is the minimum required version {FN 2017-02-17}
+		// TODO remove this by version 2.12.0 {WV 2019-11-01}
 		if ( ! class_exists( '\\SkyVerge\\WooCommerce\\PluginFramework\\' . $this->get_framework_version_namespace() . '\\SV_WC_Coupon_Compatibility' ) ) {
 			// extend the SV Framework to account for Coupon objects
 			require_once( plugin_dir_path( __FILE__ ) . 'SV_WC_Coupon_Compatibility.php' );
